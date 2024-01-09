@@ -1,0 +1,55 @@
+_schema-version: "3.2"
+ID: SonarQube_testing
+version: 0.0.1
+modules:
+- name: SonarQube_testing-app-content
+  type: com.sap.application.content
+  path: .
+  requires:
+  - name: SonarQube_testing-repo-host
+    parameters:
+      content-target: true
+  build-parameters:
+    build-result: resources
+    requires:
+    - artifacts:
+      - ovppage.zip
+      name: ovppage
+      target-path: resources/
+- name: ovppage
+  type: html5
+  path: ovp_page
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+resources:
+- name: SonarQube_testing-repo-host
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: html5-apps-repo
+    service-name: SonarQube_testing-html5-srv
+    service-plan: app-host
+- name: SonarQube_testing-destination-service
+  type: org.cloudfoundry.managed-service
+  parameters:
+    config:
+      HTML5Runtime_enabled: false
+      init_data:
+        instance:
+          destinations:
+          - Authentication: NoAuthentication
+            Name: ui5
+            ProxyType: Internet
+            Type: HTTP
+            URL: https://ui5.sap.com
+          existing_destinations_policy: update
+      version: 1.0.0
+    service: destination
+    service-name: SonarQube_testing-destination-service
+    service-plan: lite
+parameters:
+  deploy_mode: html5-repo
