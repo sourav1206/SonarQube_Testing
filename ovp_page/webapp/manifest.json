@@ -17,14 +17,14 @@
     },
     "dataSources": {
       "mainService": {
-        "uri": "/V4/Northwind/Northwind.svc/",
+        "uri": "/V2/Northwind/Northwind.svc/",
         "type": "OData",
         "settings": {
           "annotations": [
             "annotation"
           ],
           "localUri": "localService/metadata.xml",
-          "odataVersion": "4.0"
+          "odataVersion": "2.0"
         }
       },
       "annotation": {
@@ -77,10 +77,12 @@
           "bundleName": "ovppage.i18n.i18n"
         }
       },
-      "mainModel": {
-        "dataSource": "mainService",
+      "Northwind": {
+        "dataSource": "Northwind",
         "preload": true,
         "settings": {
+          "defaultBindingMode": "TwoWay",
+          "defaultCountMode":"Inline",
           "synchronizationMode": "None",
           "operationMode": "Server",
           "autoExpandSelect": true,
@@ -102,13 +104,39 @@
     }
   },
   "sap.ovp": {
-    "globalFilterModel": "mainModel",
-    "globalFilterEntityType": "Employee",
+    "globalFilterModel": "Northwind",
+    "globalFilterEntitySet": "Employees",
     "containerLayout": "resizable",
     "enableLiveFilter": true,
     "considerAnalyticalParameters": false,
-    "cards": {},
-    "globalFilterControlType": "MacroFilterBar"
+    "disableTableCardFlexibility": false,
+    "cards": {
+      "employeeListCard":{
+        "model": "Northwind",
+        "template": "sap.ovp.cards.list",
+        "settings": {
+          "entitySet": "Employees",
+          "title":"Employee List",
+          "description":"List of all employees",
+          "listType": "extended",
+          "item":{
+            "title":"{FirstName} {LastName}",
+            "description": "{Title}"
+          }
+        }
+      },
+      "productsTableCard":{
+        "model":"Northwind",
+        "template":"sap.ovp.cards.table",
+        "settings":{
+          "title":"Products",
+          "entitySet": "Products",
+          "type":"Table",
+          "dataPointAnnotationPath": "com.sap.vocabularies.UI.v1.DataPoint",
+          "annotationPath": "com.sap.vocabularies.UI.v1.LineItem"
+        }
+      }
+    }
   },
   "sap.fiori": {
     "registrationIds": [],
